@@ -21,12 +21,22 @@ namespace database
         }
         void start()
         {
-            button1.Text = "delet selected item";
+            guna2Button2.Text = "delet selected item";
+            guna2Button1.Text = "add item";
+            label1.Text = "name";
+            label2.Text = "price";
             db = new DatabaseHandler();
             updatedrinks();
-            button1.Click += (s, e) => {
+            guna2Button2.Click += (s, e) => {
                 db.deleteone(listBox1.SelectedIndex);
                 updatedrinks();
+            };
+            guna2Button1.Click += (s, e) => {
+                if (guna2TextBox1.Text.Length >=3 && guna2TextBox2.Text.Length >= 3)
+                {
+                    db.addone(guna2TextBox1.Text, Convert.ToInt32(guna2TextBox2.Text));
+                    updatedrinks();
+                }
             };
         }
         void updatedrinks()
@@ -38,6 +48,8 @@ namespace database
             }
 
         }
+
+
     }
     public class drink
     {
@@ -106,6 +118,22 @@ namespace database
                 MessageBox.Show("Error: " + e.Message);
             }
 
+        }
+        public void addone(string name, int price)
+        {
+            try
+            {
+                connection.Open();
+                string query = $"insert into drinks (    name, price) values ('{name}','{price}')";
+                MySqlCommand command = new MySqlCommand(query, connection);
+                command.ExecuteNonQuery();
+                command.Dispose();
+                connection.Close();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Error: " + e.Message);
+            }
         }
     }
 }
